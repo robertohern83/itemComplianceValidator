@@ -13,7 +13,7 @@ public class SQLValidatorTest {
 
 	@Test (expected=IllegalArgumentException.class)
 	public void testReadUnexistentFileAndFailWithFileNotFoundException() throws InvalidSQLException {
-		SQLValidator.validate(null);
+		new SQLValidator().validate(null);
 	}
 	
 	@Test
@@ -39,12 +39,8 @@ public class SQLValidatorTest {
 	}
 
 	private void trySLQValidationFailedWith(InputStream inputStream, String expectedMessage) {
-		try {
-			SQLValidator.validate(inputStream);
-			fail("Se esperaba un fallo por una excepción y no que finalizara exitosamente el llamado");
-		} catch(InvalidSQLException ex){
-			assertEquals(expectedMessage, ex.getMessage());
-		}
+		new SQLValidator().validate(inputStream).stream().forEach(s -> assertEquals(expectedMessage, s));
+		
 	}
 	
 	@Test
@@ -92,7 +88,7 @@ public class SQLValidatorTest {
 	
 	@Test
 	public void testReadExistentFileWithValidSintaxForChanges() throws InvalidSQLException {
-		SQLValidator.validate(
+		new SQLValidator().validate(
 				new ByteArrayInputStream(
 						Charset.forName("UTF-8").encode("UPDATE wwa703 set idt703 = CURRENT_TIMESTAMP where idt703 > 5")
 						.array()));

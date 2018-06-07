@@ -1,6 +1,5 @@
 package com.baccredomatic;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,7 @@ public class ValidatorsOrchestrator {
 		this.validators.stream().forEach(v -> System.out.println(v));
 	}
 	
-	public List<String> executeValidators(InputStream inputStream ){
-		return this.validators.stream().map(v -> v.validate(inputStream)).flatMap(x -> x.stream()).collect(Collectors.toList());
+	public List<String> executeValidators(ValidationInput input ){
+		return this.validators.stream().map(v -> v.validate(input)).flatMap(x -> x.stream()).collect(Collectors.toList());
 	}
 }

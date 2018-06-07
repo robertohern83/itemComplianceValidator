@@ -1,59 +1,61 @@
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import org.apache.log4j.LogManager;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.baccredomatic.SpringContext;
+import com.baccredomatic.ValidationInput;
 import com.baccredomatic.ValidatorsOrchestrator;
 
 /**
- * User: luke
+ * Punto de entrada para ejecución de validaciones sobre archivos fuente base
+ * User: rhernandezm
  * Date: 7/05/13
  * Time: 6:50 AM
  */
 public class EntryPoint {
+	static AnnotationConfigApplicationContext context =
+			new AnnotationConfigApplicationContext(SpringContext.class);
+	
+	
     public static void main(String[] args) throws IOException {
-    	AnnotationConfigApplicationContext context =
-				new AnnotationConfigApplicationContext(SpringContext.class);
     	
-    	ValidatorsOrchestrator nature = context.getBean(ValidatorsOrchestrator.class);
-    	
-    	nature.showValidators();
-    	
-    	System.out.println(nature.executeValidators(new ByteArrayInputStream(
-						Charset.forName("UTF-8").encode("Select * from wwa703;\nCREATE table")
-						.array())));
+    	EntryPoint entryPoint = new EntryPoint();
     	
     	Path source = Paths.get("/temp/SQL/");
-        Files.walk(source).filter(Files::isRegularFile).forEach(System.out::println);
+        System.out.println(Files.walk(source)
+        		.filter(Files::isRegularFile)
+        		.filter(EntryPoint.filterSQLFiles())
+        			.map(entryPoint::validateFile)
+        			.flatMap(x -> x.stream())
+        			.collect(Collectors.toList()));
         
-        walkFiles(source);
-    	
+        
     }
-    
-    public static void walkFiles(Path source){
-    	if (Files.isDirectory(source)) {
-    		try {
-    			Files.walk(source).filter(Files::isDirectory).filter(f->!f.toString().equals(source.toString())).forEach(EntryPoint::walkFiles);
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
-		}
-    	else{
-    		try {
-				Files.lines(source).forEach(System.out::println);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
+
+	private static Predicate<? super Path> filterSQLFiles() {
+		return f->f.getFileName().toString().matches("(?i).*.sql");
+	}
+	
+	private List<String> validateFile(Path path){
+		ValidatorsOrchestrator validateOrch = context.getBean(ValidatorsOrchestrator.class);
 		
-       
-    }
+		try {
+			return validateOrch.executeValidators(new ValidationInput(Files.newInputStream(path), path.toString()));
+		} catch (IOException e) {
+			LogManager.getLogger(this.getClass()).error(e);
+		}
+		return new ArrayList<String>(0);
+	}
+    
+    
     
     
 }

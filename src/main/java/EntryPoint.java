@@ -27,7 +27,11 @@ public class EntryPoint {
 	
     public static void main(String[] args) throws IOException {
     	EntryPoint entryPoint = new EntryPoint();
-    	Path source = Paths.get("/temp/SQL/");
+    	if(args.length < 1 || null == args[0]){
+    		throw new IllegalArgumentException("No se especificó la ruta de ejecución");
+    	}
+    	
+    	Path source = Paths.get(args[0]);
         System.out.println(Files.walk(source)
         		.filter(Files::isRegularFile)
         		.filter(EntryPoint.filterSQLFiles())

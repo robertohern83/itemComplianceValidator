@@ -44,7 +44,7 @@ pipeline {
                 
                 script{
                 	RESULT = sh (
-   						script: 'java -jar itemComplianceValidator.jar ./testFolder',
+   						script: 'java -jar target/itemComplianceValidator.jar ./testFolder',
     					returnStdout: true
 					).trim()
 					

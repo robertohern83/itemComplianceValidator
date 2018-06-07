@@ -36,10 +36,19 @@ public class EntryPoint {
         			.collect(Collectors.toList()));
     }
 
+    /**
+     * Filtra los archivos con formato SQL sin importar si el nombre están en mayúscula o minúscula
+     * @return Predicado con el filtro correspondiente
+     */
 	private static Predicate<? super Path> filterSQLFiles() {
 		return f->f.getFileName().toString().matches("(?i).*.sql");
 	}
 	
+	/**
+	 * Invocación a validación de un archivo específico
+	 * @param path
+	 * @return Lista de errores encontrados
+	 */
 	private List<String> validateFile(Path path){
 		try {
 			return validateOrch.executeValidators(new ValidationInput(Files.newInputStream(path), path.toString()));

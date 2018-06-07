@@ -11,6 +11,11 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * Validador estándar de SQLs para cumplimiento base
+ * @author rhernandezm
+ *
+ */
 @Service
 public class SQLValidator implements ComplianceValidator {
 

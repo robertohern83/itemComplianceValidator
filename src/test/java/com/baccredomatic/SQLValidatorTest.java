@@ -11,7 +11,7 @@ import org.junit.Test;
 public class SQLValidatorTest {
 
 	@Test (expected=IllegalArgumentException.class)
-	public void testReadUnexistentFileAndFailWithFileNotFoundException() throws InvalidSQLException {
+	public void testReadUnexistentFileAndFailWithFileNotFoundException() {
 		new SQLValidator().validate(null);
 	}
 	
@@ -105,7 +105,7 @@ public class SQLValidatorTest {
 	}
 	
 	@Test
-	public void testReadExistentFileWithValidSintaxForChanges() throws InvalidSQLException {
+	public void testReadExistentFileWithValidSintaxForChanges() {
 		new SQLValidator().validate(
 				new ValidationInput(
 				new ByteArrayInputStream(

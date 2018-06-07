@@ -24,6 +24,8 @@ public class SQLValidator implements ComplianceValidator {
 			throw new IllegalArgumentException("No input data available");
 		}
 		
+		//This is a change to test the merge capabilities of Git
+		
 		List<String> errors = new ArrayList<String>(10);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(input.getInputStream()));
 		try {

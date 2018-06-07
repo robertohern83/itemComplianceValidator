@@ -14,14 +14,25 @@ pipeline {
             }
         }
         
+        stage ('Coverage') {
+            steps {
+                sh 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent test' 
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/**/*.xml'
+                    jacoco execPattern: '**/target/**.exec'
+                }
+            }
+        }
+        
         stage ('Build') {
             steps {
-                sh 'mvn -Dmaven.test.failure.ignore=true package' 
+                sh 'mvn -Dmaven.test.skip=true package' 
             }
             post {
                 success {
                     archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-                    junit 'target/surefire-reports/**/*.xml' 
                 }
             }
         }

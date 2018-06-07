@@ -26,19 +26,24 @@ public class EntryPoint {
 	ValidatorsOrchestrator validateOrch = context.getBean(ValidatorsOrchestrator.class);
 	
     public static void main(String[] args) throws IOException {
-    	EntryPoint entryPoint = new EntryPoint();
+    	
     	if(args.length < 1 || null == args[0]){
     		throw new IllegalArgumentException("No se especificó la ruta de ejecución");
     	}
     	
     	Path source = Paths.get(args[0]);
-        System.out.println(Files.walk(source)
+        System.out.println(validateFilesOn(source));
+    }
+
+	private static List<String> validateFilesOn(Path source) throws IOException {
+		EntryPoint entryPoint = new EntryPoint();
+		return Files.walk(source)
         		.filter(Files::isRegularFile)
         		.filter(EntryPoint.filterSQLFiles())
         			.map(entryPoint::validateFile)
         			.flatMap(x -> x.stream())
-        			.collect(Collectors.toList()));
-    }
+        			.collect(Collectors.toList());
+	}
 
     /**
      * Filtra los archivos con formato SQL sin importar si el nombre están en mayúscula o minúscula

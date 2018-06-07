@@ -41,12 +41,13 @@ pipeline {
             steps {
                 sh 'mkdir testFolder'
                 sh 'echo "Select * from wwa703; Create table" > testFolder/testFile.sql'
-                RESULT = sh (
-   					 script: 'java -jar itemComplianceValidator.jar ./testFolder',
-    				returnStdout: true
-				).trim()
                 
                 script{
+                	RESULT = sh (
+   						script: 'java -jar itemComplianceValidator.jar ./testFolder',
+    					returnStdout: true
+					).trim()
+					
                 	if(!${RESULT} =~ '.*incluye la constante CREATE.*'){
                 		error('Salida esperada no válida: ' + ${RESULT})
                 	}

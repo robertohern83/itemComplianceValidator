@@ -48,6 +48,8 @@ pipeline {
     					returnStdout: true
 					).trim()
 					
+					sh 'echo ' + RESULT
+					
                 	if(!(RESULT =~ '.*incluye la constante CREATE.*')){
                 		error('Salida esperada no válida: ' + RESULT)
                 	}

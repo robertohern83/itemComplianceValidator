@@ -48,8 +48,8 @@ pipeline {
     					returnStdout: true
 					).trim()
 					
-                	if(!${RESULT} =~ '.*incluye la constante CREATE.*'){
-                		error('Salida esperada no válida: ' + ${RESULT})
+                	if(!(RESULT =~ '.*incluye la constante CREATE.*')){
+                		error('Salida esperada no válida: ' + RESULT)
                 	}
                 }
             }

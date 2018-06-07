@@ -39,7 +39,7 @@ pipeline {
         
         stage ('AcceptanceTest') {
             steps {
-                sh 'mkdir testFolder'
+                sh 'mkdir -p testFolder'
                 sh 'echo "Select * from wwa703; Create table" > testFolder/testFile.sql'
                 
                 script{

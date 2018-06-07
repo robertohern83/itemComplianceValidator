@@ -101,6 +101,8 @@
                                     <zipfileset dir="${build.directory}" includes="lib/**" />
                                     <zipfileset dir="${build.directory}" includes="${project.build.finalName}.jar" />
                                     <zipfileset dir="${basedir}" includes="readme.txt" />
+                                    <zipfileset dir="${basedir}" includes="${project.build.finalName}.bat" />
+                                    <zipfileset dir="${basedir}" includes="${project.build.finalName}.sh" />
                                 </zip>
                             </target>
                         </configuration>

@@ -23,12 +23,10 @@ import com.baccredomatic.ValidatorsOrchestrator;
 public class EntryPoint {
 	static AnnotationConfigApplicationContext context =
 			new AnnotationConfigApplicationContext(SpringContext.class);
-	
+	ValidatorsOrchestrator validateOrch = context.getBean(ValidatorsOrchestrator.class);
 	
     public static void main(String[] args) throws IOException {
-    	
     	EntryPoint entryPoint = new EntryPoint();
-    	
     	Path source = Paths.get("/temp/SQL/");
         System.out.println(Files.walk(source)
         		.filter(Files::isRegularFile)
@@ -36,8 +34,6 @@ public class EntryPoint {
         			.map(entryPoint::validateFile)
         			.flatMap(x -> x.stream())
         			.collect(Collectors.toList()));
-        
-        
     }
 
 	private static Predicate<? super Path> filterSQLFiles() {
@@ -45,8 +41,6 @@ public class EntryPoint {
 	}
 	
 	private List<String> validateFile(Path path){
-		ValidatorsOrchestrator validateOrch = context.getBean(ValidatorsOrchestrator.class);
-		
 		try {
 			return validateOrch.executeValidators(new ValidationInput(Files.newInputStream(path), path.toString()));
 		} catch (IOException e) {
